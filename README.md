@@ -19,3 +19,12 @@ This repo is the code done by team # 2 for the Research Assistant project under 
 ### Instructions on Running 
 
 None so far
+
+### Useful information
+
+- https://github.com/waymo-research/waymo-open-dataset
+
+### Datasets
+
+- https://www.waymo.com/open
+- https://level5.lyft.com/dataset/#download
