@@ -1,6 +1,7 @@
 # Ignoring datasets
 data/
-waymo-od/
+waymo_open_dataset/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
