@@ -14,6 +14,7 @@ from waymo_open_dataset import dataset_pb2 as open_dataset
 from shapely.geometry import Polygon, LineString
 import random
 import sys
+import csv
 
 # TODO: Change this to your own setting
 os.environ['PYTHONPATH']='/env/python:~/github/waymo-open-dataset'
@@ -34,7 +35,7 @@ skipped_frames = 0
 
 """
 features:
-[vx, vy, vz, dx, dy, vfx, vfy, vfz, afx, afy, afz]
+[vx, vy, vz, dx, dy, vfx, vfy, vfz, afx, afy, afz, num_v_labels]
 
 labels:
 [ax, ay, az]
@@ -44,7 +45,7 @@ def write_to_csv(filename, feats, labels):
   data = np.hstack((feats, labels))
   with open(filename,'w', newline='') as f:
     w = csv.writer(f)
-    w.writerow(['vx', 'vy', 'vz', 'dx', 'dy', 'vfx', 'vfy', 'vfz', 'afx', 'afy', 'afz', 'ax', 'ay', 'az'])
+    w.writerow(['vx', 'vy', 'vz', 'dx', 'dy', 'vfx', 'vfy', 'vfz', 'afx', 'afy', 'afz', 'ax', 'ay', 'az', 'num_v_labels'])
     w.writerows(data)
 
 
@@ -163,6 +164,7 @@ def get_features_and_labels(frames, detection_tolerance=0.0):
 
     if front_car_label is not None:
        feats, labels, v_cur_GF_prev, v_front_GF_prev = get_essentials_per_frame(dt, frame, front_car_label, v_cur_GF_prev, v_front_GF_prev)
+       feats = np.hstack((feats, len(v_laser_labels)))
     else:
         skipped_frames += 1
         print("No front car captured, will skip this frame")
@@ -170,7 +172,7 @@ def get_features_and_labels(frames, detection_tolerance=0.0):
         #if there is no front car
         v_cur_GF = get_current_car_velocity_wrt_GF(frame)
         vx, vy, vz = v_cur_GF
-        feats = [vx, vy, vz, 0, 0, 0, 0, 0, 0, 0, 0]
+        feats = [vx, vy, vz, 0, 0, 0, 0, 0, 0, 0, 0, len(v_laser_labels)]
         ax, ay, az = [0,0,0]
 
         if v_cur_GF_prev is not None:
@@ -192,9 +194,10 @@ if __name__ == "__main__":
     result_path = sys.argv[2]
     detection_tolerance = int(sys.argv[3])
 
-    files = [join(seg_path, f) for f in listdir(seg_path) if isfile(join(seg_path, f))]
+    files = [join(seg_path, f) for f in listdir(seg_path) if isfile(join(seg_path, f)) and ".tfrecord" in f]
 
     print("Total files: ", len(files))
+    print("Detection tolerance: ", detection_tolerance)
 
     feat_set = None
     label_set = None
