@@ -190,7 +190,7 @@ def get_features_and_labels(frames, detection_tolerance=0.0):
 if __name__ == "__main__":
     seg_path = sys.argv[1]
     result_path = sys.argv[2]
-    detection_tolerance = stoi(sys.argv[3])
+    detection_tolerance = int(sys.argv[3])
 
     files = [join(seg_path, f) for f in listdir(seg_path) if isfile(join(seg_path, f))]
 
