@@ -1,4 +1,4 @@
-## Team 2: Waymo & Lyft Driverless Car Data Analysis and Driving Modeling
+## Team 3: Waymo & Lyft Driverless Car Data Analysis and Driving Modeling
 
 #### Members:
 
